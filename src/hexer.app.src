@@ -1,0 +1,15 @@
+{
+  application, hexer,
+  [
+   {description, "Hex command-line tool"},
+   {vsn, "0.0.1"},
+   { applications
+   , [ kernel
+     , stdlib
+     , shotgun
+     ]
+   },
+   {modules, []},
+   {registered, []}
+  ]
+}.
