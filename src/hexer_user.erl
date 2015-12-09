@@ -6,7 +6,7 @@
 %% API
 %%------------------------------------------------------------------------------
 
--spec auth() -> ok.
+-spec auth() -> ok | {error, any()}.
 auth() ->
   Username = hexer_utils:prompt("Username: ", "~s"),
   Password = hexer_utils:prompt("Password: ", password),
