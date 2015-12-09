@@ -18,8 +18,10 @@ update(Key, Value) ->
 
 -spec read() -> [proplists:property()].
 read() ->
-  {ok, Config} = file:consult(config_path()),
-  Config.
+  case file:consult(config_path()) of
+    {ok, Config} -> Config;
+    {error, enoent} -> []
+  end.
 
 -spec write([proplists:property()]) -> ok.
 write(Config) ->

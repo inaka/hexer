@@ -4,36 +4,26 @@
 
 -spec main([string()]) -> ok.
 main(Args) ->
-  {ok, _} = application:ensure_all_started(?MODULE),
-  OptSpecList = option_spec_list(),
+  {ok, _} = application:ensure_all_started(hexer),
+  OptSpecList = hexer_options:option_spec_list(),
   case getopt:parse(OptSpecList, Args) of
     {ok, {[], []}} ->
-      help();
+      hexer_options:help();
     {ok, {Options, Commands}} ->
       try
-        AtomCommands = [list_to_existing_atom(Cmd) || Cmd <- Commands],
+        AtomCommands = [list_to_atom(Cmd) || Cmd <- Commands],
         process(hexer_options, Options),
         process(hexer_commands, AtomCommands),
         ok
       catch
-        _:Reason -> hexer_utils:error(Reason)
+        _:Reason ->
+          hexer_utils:error(Reason),
+          hexer_utils:error(erlang:get_stacktrace())
       end;
     {error, Error} ->
       hexer_utils:error(Error),
-      help()
-  end,
-  ok.
-
--spec option_spec_list() -> [getopt:option_spec()].
-option_spec_list() ->
-  [{help,     $h, "help",     undefined, "Show this help information."},
-   {version,  $v, "version",  undefined, "Show the version of this tool."}
-  ].
-
--spec help() -> ok.
-help() ->
-  OptSpecList = option_spec_list(),
-  getopt:usage(OptSpecList, ?MODULE, standard_io).
+      hexer_options:help()
+  end.
 
 -type option() :: {atom(), any()} | atom().
 -type command() :: atom().
