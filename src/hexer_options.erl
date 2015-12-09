@@ -15,7 +15,11 @@ option_spec_list() ->
 -spec help() -> ok.
 help() ->
   OptSpecList = option_spec_list(),
-  getopt:usage(OptSpecList, "hexer", standard_io).
+  Commands    =
+    [{"\nCommands: ", "\n"},
+     { "user.auth", "Generate API key by providing username and password."}
+    ],
+  getopt:usage(OptSpecList, "hexer", "[command]", Commands).
 
 -spec version() -> ok.
 version() ->
