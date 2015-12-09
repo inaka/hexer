@@ -19,10 +19,20 @@ all() -> hexer_test_utils:all(?MODULE).
 
 -spec help(hexer_test_utils:config()) -> {comment, string()}.
 help(_Config) ->
-  ok = hexer_options:help(),
+  HelpRegex = "Usage: .*",
+
+  ct:comment("Show help"),
+  HelpFun = fun() -> ok = hexer_options:help() end,
+  hexer_test_utils:check_output(HelpRegex, HelpFun),
+
   {comment, ""}.
 
 -spec version(hexer_test_utils:config()) -> {comment, string()}.
 version(_Config) ->
-  ok = hexer_options:version(),
+  VersionRegex = "Version .*",
+
+  ct:comment("Show version information"),
+  VersionFun = fun() -> ok = hexer_options:version() end,
+  hexer_test_utils:check_output(VersionRegex, VersionFun),
+
   {comment, ""}.
