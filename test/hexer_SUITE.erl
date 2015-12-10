@@ -35,12 +35,17 @@ main(_Config) ->
   NoArgsFun = fun() -> ok = hexer:main([]) end,
   hexer_test_utils:check_output(HelpRegex, NoArgsFun),
 
-  ct:comment("hexer should call the specified command"),
+  ct:comment("hexer should call the specified commands"),
   Self = self(),
   AuthFun = fun() -> Self ! auth end,
   meck:expect(hexer_user, auth, AuthFun),
   ok = hexer:main(["user.auth"]),
   ok = hexer_test_utils:wait_receive(auth, 500),
+
+  RegisterFun = fun() -> Self ! register end,
+  meck:expect(hexer_user, register, RegisterFun),
+  ok = hexer:main(["user.register"]),
+  ok = hexer_test_utils:wait_receive(register, 500),
 
   ct:comment("Unexisting command or option should show error & help"),
   OptionArgFun = fun() -> ok = hexer:main(["--something"]) end,
