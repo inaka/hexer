@@ -1,12 +1,13 @@
 {
   application, hexer,
   [
-   {description, "Hex command-line tool"},
+   {description, "Standalone command-line interface for hex.pm"},
    {vsn, "0.0.1"},
    { applications
    , [ kernel
      , stdlib
      , shotgun
+     , getopt
      ]
    },
    {modules, []},
