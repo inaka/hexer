@@ -2,6 +2,7 @@
 
 -export([ new_api_key/3
         , create_user/3
+        , publish/3
         ]).
 
 %%------------------------------------------------------------------------------
@@ -42,6 +43,19 @@ create_user(Username, Email, Password) ->
       {error, Error}
   end.
 
+-spec publish(string(), string(), binary()) -> ok | {error, any()}.
+publish(APIKey, Name, Tar) ->
+  Path = string:join(["/api/packages", Name, "releases"], "/"),
+  case post(APIKey, Path, Tar) of
+    {ok, #{status_code := StatusCode}}
+      when 200 =< StatusCode, StatusCode < 300 ->
+      ok;
+    {ok, #{status_code := StatusCode, body := ResBody}} ->
+      {error, {StatusCode, binary_to_term(ResBody)}};
+    {error, Error} ->
+      {error, Error}
+  end.
+
 %%------------------------------------------------------------------------------
 %% Internal Functions
 %%------------------------------------------------------------------------------
@@ -64,10 +78,28 @@ api_port() -> 443.
   {ok, map()} | {error, any()}.
 post(Username, Password, Path, Body) ->
   {ok, Conn} = open_connection(),
+  try
+    Headers = #{ basic_auth         => {Username, Password}
+               , <<"Accept">>       => <<"application/vnd.hex+erlang">>
+               , <<"Content-Type">> => <<"application/vnd.hex+erlang">>
+               },
 
-  Headers = #{ basic_auth         => {Username, Password}
-             , <<"Accept">>       => <<"application/vnd.hex+erlang">>
-             , <<"Content-Type">> => <<"application/vnd.hex+erlang">>
-             },
+    shotgun:post(Conn, Path, Headers, Body, #{})
+  after
+    shotgun:close(Conn)
+  end.
 
-  shotgun:post(Conn, Path, Headers, Body, #{}).
+-spec post(string(), string(), binary()) ->
+  {ok, map()} | {error, any()}.
+post(APIKey, Path, Body) ->
+  {ok, Conn} = open_connection(),
+  try
+    Headers = #{ <<"Authorization">>  => list_to_binary(APIKey)
+               , <<"Accept">>         => <<"application/vnd.hex+erlang">>
+               , <<"Content-Type">>   => <<"application/octet-stream">>
+               },
+
+    shotgun:post(Conn, Path, Headers, Body, #{timeout => 10000})
+  after
+    shotgun:close(Conn)
+  end.

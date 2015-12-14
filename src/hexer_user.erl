@@ -36,9 +36,9 @@ generate_key(Username, Password) ->
   hexer_utils:print("Generating API key..."),
   {ok, Name} = inet:gethostname(),
   case hexer_server:new_api_key(list_to_binary(Name), Username, Password) of
-    {ok, Secret} ->
+    {ok, Key} ->
       hexer_config:update(username, Username),
-      hexer_config:update(secret, binary_to_list(Secret));
+      hexer_config:update(key, binary_to_list(Key));
     {error, Error} ->
       hexer_utils:error("Generation of API key failed (~p)", [Error]),
       {error, Error}

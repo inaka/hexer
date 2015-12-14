@@ -1,6 +1,8 @@
 -module(hexer_config).
 
--export([update/2]).
+-export([ update/2
+        , api_key/0
+        ]).
 
 %%------------------------------------------------------------------------------
 %% API
@@ -11,6 +13,13 @@ update(Key, Value) ->
   Config = read(),
   NewConfig = lists:ukeymerge(1, [{Key, Value}], lists:keysort(1, Config)),
   write(NewConfig).
+
+-spec api_key() -> {ok, string()}.
+api_key() ->
+  case lists:keyfind(key, 1, read()) of
+    {key, Key} -> {ok, Key};
+    _ -> throw(no_api_key)
+  end.
 
 %%------------------------------------------------------------------------------
 %% Internal Functions
