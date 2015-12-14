@@ -90,14 +90,14 @@ publish(_Config) ->
   Post500Fun = fun(_, _, _, _, _) -> {ok, ResponseError} end,
   meck:expect(shotgun, post, Post500Fun),
   ok = try ok = run_in_dir(AppDir, fun hexer_package:publish/0), error
-       catch _:_ -> ok
+       catch _:{500, {}} -> ok
        end,
 
   ct:comment("Error: shotgun error"),
   PostErrorFun = fun(_, _, _, _, _) -> {error, unexpected} end,
   meck:expect(shotgun, post, PostErrorFun),
   ok = try ok = run_in_dir(AppDir, fun hexer_package:publish/0), error
-       catch _:_ -> ok
+       catch _:unexpected -> ok
        end,
 
   {comment, ""}.
@@ -106,9 +106,11 @@ publish(_Config) ->
 run_in_dir(Dir, Fun) ->
   {ok, Cwd} = file:get_cwd(),
   ok = file:set_cwd(Dir),
-  Result = Fun(),
-  ok = file:set_cwd(Cwd),
-  Result.
+  try
+    Fun()
+  after
+    ok = file:set_cwd(Cwd)
+  end.
 
 -spec generate_api_key() -> ok.
 generate_api_key() ->
