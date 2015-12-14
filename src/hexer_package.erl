@@ -16,13 +16,13 @@ publish() ->
   %% - AppDetails from *.app.src
   %% - Deps
 
-  %% We assume the app's dir is the current directory
+  %% We assume the app's dir is the current directory.
   AppDir = ".",
   #{ name    := Name
    , version := Version
    , details := Details
    } = load_app_info(),
-  Deps = hexer_deps:resolve(),
+  Deps = hexer_deps:resolve(AppDir),
   case validate_app_details(Details) of
     ok -> publish(AppDir, Name, Version, Deps, Details);
     Error -> Error
@@ -118,7 +118,7 @@ publish(AppDir, Name, Version, Deps, Details) ->
   ok | {error, any()}.
 upload_package(APIKey, Name, Version, Meta, Files) ->
   {ok, Tar} = hexer_utils:create_tar(Name, Version, Meta, Files),
-  case hexer_server:publish(APIKey, Tar) of
+  case hexer_server:publish(APIKey, atom_to_list(Name), Tar) of
     ok -> hexer_utils:print("Published ~s ~s", [Name, Version]);
     Error -> Error
   end.
@@ -127,12 +127,12 @@ upload_package(APIKey, Name, Version, Meta, Files) ->
 default_files() ->
   [ "src", "c_src", "include", "priv"
   , "rebar.config.script", "rebar.config", "rebar.lock"
-  , "Makefile", "*.mk"
+  , "Makefile", "erlang.mk"
   , "README*", "readme*"
   , "LICENSE*", "license*"
   ].
 
 -spec format_deps([hexer_deps:dep()]) -> string().
 format_deps(Deps) ->
-  DepsStr = [binary_to_list(<<N/binary, " ", V/binary>>) || {N, V} <- Deps],
+  DepsStr = [atom_to_list(Name) ++ " " ++ Version || {Name, Version} <- Deps],
   string:join(DepsStr, "\n    ").

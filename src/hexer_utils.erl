@@ -16,6 +16,10 @@
 
 -define(OP_PUTC, 0).
 
+%%------------------------------------------------------------------------------
+%% Exported functions
+%%------------------------------------------------------------------------------
+
 -spec prompt(string(), string() | password | boolean) ->
   string() | boolean().
 prompt(Message, password) ->
@@ -69,7 +73,6 @@ error(Error) -> error("~p", [Error]).
 error(Message, Args) ->
   io:format("Error: " ++ Message ++ "~n", Args).
 
-
 -spec create_tar(atom(), string(), map(), [any()]) ->
   {ok, binary()} | {error, any()}.
 create_tar(Name, Version, Meta, Files) ->
@@ -95,6 +98,28 @@ create_tar(Name, Version, Meta, Files) ->
   ok = file:delete(ContentsPath),
   ok = file:delete(Path),
   Tar.
+
+-spec find_single_file([string()]) -> {ok, string()} | notfound.
+find_single_file([]) ->
+  notfound;
+find_single_file([Pattern | Patterns]) ->
+  case filelib:wildcard(Pattern) of
+    [] -> find_single_file(Patterns);
+    [File | _] -> {ok, File}
+  end.
+
+-spec find_all([string()], string()) -> [{string(), string()}].
+find_all(Paths, Dir) ->
+  Dir1 = case Dir of "." -> ""; _ -> Dir end,
+  AbsDir = filename:absname(Dir1),
+  Files  = lists:flatmap(fun dir_files1/1,
+                         [filename:join(Dir, P) || P <- Paths]
+                        ),
+  [{F1 -- (AbsDir ++ "/"), F1} || F1 <- filter_regular(Files)].
+
+%%------------------------------------------------------------------------------
+%% Helper functions
+%%------------------------------------------------------------------------------
 
 -spec encode_term(map()) -> binary().
 encode_term(Meta) ->
@@ -124,23 +149,6 @@ binarify({Key, Value}) ->
     {binarify(Key), binarify(Value)};
 binarify(Term) ->
     Term.
-
--spec find_single_file([string()]) -> {ok, string()} | notfound.
-find_single_file([]) ->
-  notfound;
-find_single_file([Pattern | Patterns]) ->
-  case filelib:wildcard(Pattern) of
-    [] -> find_single_file(Patterns);
-    [File | _] -> {ok, File}
-  end.
-
--spec find_all([string()], string()) -> [{string(), string()}].
-find_all(Paths, Dir) ->
-  AbsDir = filename:absname(Dir),
-  Files  = lists:flatmap(fun dir_files1/1,
-                         [filename:join(Dir, P) || P <- Paths]
-                        ),
-  [{F1 -- (AbsDir ++ "/"), F1} || F1 <- filter_regular(Files)].
 
 -spec dir_files1(string()) -> [string()].
 dir_files1(Dir) ->

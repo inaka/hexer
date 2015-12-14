@@ -4,7 +4,9 @@
   [ hexer
   , hexer_commands
   , hexer_config
+  , hexer_deps
   , hexer_options
+  , hexer_package
   , hexer_server
   , hexer_user
   , hexer_utils

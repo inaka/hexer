@@ -21,10 +21,12 @@ all() -> hexer_test_utils:all(?MODULE).
 
 init_per_testcase(_, Config) ->
   meck:new(hexer_user, [passthrough]),
+  meck:new(hexer_package, [passthrough]),
   Config.
 
 end_per_testcase(_, Config) ->
   meck:unload(hexer_user),
+  meck:unload(hexer_package),
   Config.
 
 -spec main(hexer_test_utils:config()) -> {comment, string()}.
@@ -46,6 +48,12 @@ main(_Config) ->
   meck:expect(hexer_user, register, RegisterFun),
   ok = hexer:main(["user.register"]),
   ok = hexer_test_utils:wait_receive(register, 500),
+
+  PublishFun = fun() -> Self ! publish end,
+  meck:expect(hexer_package, publish, PublishFun),
+  ok = hexer:main(["publish"]),
+  ok = hexer_test_utils:wait_receive(publish, 500),
+
 
   ct:comment("Unexisting command or option should show error & help"),
   OptionArgFun = fun() -> ok = hexer:main(["--something"]) end,
