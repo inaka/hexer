@@ -81,6 +81,19 @@ publish(_Config) ->
   ok = file:write_file("src/hexer.app.src", AppSrcBin2),
   {error, _} = hexer_package:publish(),
 
+  meck:expect(hexer_utils, prompt, PromptTrueFun),
+
+  ct:comment("Error: server error when publishing"),
+  ResponseError = #{status_code => 500, body => term_to_binary({})},
+  Post500Fun = fun(_, _, _, _, _) -> {ok, ResponseError} end,
+  meck:expect(shotgun, post, Post500Fun),
+  {error, _} = run_in_dir(AppDir, fun hexer_package:publish/0),
+
+  ct:comment("Error: shotgun error"),
+  PostErrorFun = fun(_, _, _, _, _) -> {error, unexpected} end,
+  meck:expect(shotgun, post, PostErrorFun),
+  {error, _} = run_in_dir(AppDir, fun hexer_package:publish/0),
+
   {comment, ""}.
 
 -spec run_in_dir(string(), function()) -> any().
