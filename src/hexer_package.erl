@@ -25,7 +25,7 @@ publish() ->
   Deps = hexer_deps:resolve(AppDir),
   case validate_app_details(Details) of
     ok -> publish(AppDir, Name, Version, Deps, Details);
-    Error -> Error
+    {error, Error} -> throw(Error)
   end.
 
 %%------------------------------------------------------------------------------
@@ -120,7 +120,7 @@ upload_package(APIKey, Name, Version, Meta, Files) ->
   {ok, Tar} = hexer_utils:create_tar(Name, Version, Meta, Files),
   case hexer_server:publish(APIKey, atom_to_list(Name), Tar) of
     ok -> hexer_utils:print("Published ~s ~s", [Name, Version]);
-    Error -> Error
+    {error, Error} -> throw(Error)
   end.
 
 -spec default_files() -> [string()].

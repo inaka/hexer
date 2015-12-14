@@ -83,11 +83,12 @@ create_tar(Name, Version, Meta, Files) ->
   {ok, Contents} = file:read_file(ContentsPath),
   MetaString = encode_term(Meta),
 
-  Blob = <<MetaString/binary, Contents/binary>>,
+  Blob = <<(tar_version())/binary, MetaString/binary, Contents/binary>>,
   <<X:256/big-unsigned-integer>> = crypto:hash(sha256, Blob),
   Checksum = string:to_upper(lists:flatten(io_lib:format("~64.16.0b", [X]))),
 
   MetaFiles = [
+               {"VERSION", tar_version()},
                {"CHECKSUM", list_to_binary(Checksum)},
                {"metadata.config", MetaString},
                {"contents.tar.gz", Contents}
@@ -120,6 +121,9 @@ find_all(Paths, Dir) ->
 %%------------------------------------------------------------------------------
 %% Helper functions
 %%------------------------------------------------------------------------------
+
+-spec tar_version() -> binary().
+tar_version() -> <<"3">>.
 
 -spec encode_term(map()) -> binary().
 encode_term(Meta) ->

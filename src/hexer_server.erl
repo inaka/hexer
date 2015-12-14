@@ -45,7 +45,7 @@ create_user(Username, Email, Password) ->
 
 -spec publish(string(), string(), binary()) -> ok | {error, any()}.
 publish(APIKey, Name, Tar) ->
-  Path = string:join(["/api/packages" ++ Name ++ "releases"], "/"),
+  Path = string:join(["/api/packages", Name, "releases"], "/"),
   case post(APIKey, Path, Tar) of
     {ok, #{status_code := StatusCode}}
       when 200 =< StatusCode, StatusCode < 300 ->
@@ -94,12 +94,12 @@ post(Username, Password, Path, Body) ->
 post(APIKey, Path, Body) ->
   {ok, Conn} = open_connection(),
   try
-    Headers = #{ <<"Authorization">> => list_to_binary(APIKey)
-               , <<"Accept">>        => <<"application/vnd.hex+erlang">>
-               , <<"Content-Type">>  => <<"application/octet-stream">>
+    Headers = #{ <<"Authorization">>  => list_to_binary(APIKey)
+               , <<"Accept">>         => <<"application/vnd.hex+erlang">>
+               , <<"Content-Type">>   => <<"application/octet-stream">>
                },
 
-    shotgun:post(Conn, Path, Headers, Body, #{})
+    shotgun:post(Conn, Path, Headers, Body, #{timeout => 10000})
   after
     shotgun:close(Conn)
   end.
