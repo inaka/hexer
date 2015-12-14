@@ -2,7 +2,7 @@ PROJECT = hexer
 
 DEPS = getopt shotgun
 
-dep_getopt  = git https://github.com/jcomellas/getopt       v0.8.2
+dep_getopt  = hex 0.8.2
 dep_shotgun = git https://github.com/inaka/shotgun.git      13b6b4
 
 TEST_DEPS = katana mixer meck

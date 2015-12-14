@@ -45,10 +45,6 @@ publish() ->
                      , details => details()
                      }.
 
--type dep() ::
-        { Name :: atom(), Version :: string()} |
-        { Name :: atom(), {git, Url :: atom(), Tag :: string()}}.
-
 -spec load_app_info() -> app_info().
 load_app_info() ->
   case hexer_utils:find_single_file(["ebin/*.app", "src/*.app.src"]) of
@@ -73,7 +69,7 @@ validate_app_details(Details) ->
       ok
   end.
 
--spec publish(string(), atom(), string(), [dep()], details()) ->
+-spec publish(string(), atom(), string(), [hexer_deps:dep()], details()) ->
   ok | {error, any()}.
 publish(AppDir, Name, Version, Deps, Details) ->
   Description = list_to_binary(maps:get(description, Details, "")),
@@ -136,6 +132,7 @@ default_files() ->
   , "LICENSE*", "license*"
   ].
 
+-spec format_deps([hexer_deps:dep()]) -> string().
 format_deps(Deps) ->
   DepsStr = [binary_to_list(<<N/binary, " ", V/binary>>) || {N, V} <- Deps],
   string:join(DepsStr, "\n    ").

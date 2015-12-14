@@ -134,5 +134,29 @@ find_single_file([Pattern | Patterns]) ->
     [File | _] -> {ok, File}
   end.
 
--spec find_all([string()], string()) -> [string()].
-find_all(_Dirs, _AppDir) -> [].
+-spec find_all([string()], string()) -> [{string(), string()}].
+find_all(Paths, Dir) ->
+  AbsDir = filename:absname(Dir),
+  Files  = lists:flatmap(fun dir_files1/1,
+                         [filename:join(Dir, P) || P <- Paths]
+                        ),
+  [{F1 -- (AbsDir ++ "/"), F1} || F1 <- filter_regular(Files)].
+
+-spec dir_files1(string()) -> [string()].
+dir_files1(Dir) ->
+  lists:flatmap(fun(Y) -> dir_files(Y) end, filelib:wildcard(Dir)).
+
+-spec filter_regular([string()]) -> [string()].
+filter_regular(Files) ->
+  lists:filter(fun filelib:is_regular/1,
+               [filename:absname(F) || F <- Files]
+              ).
+
+-spec dir_files(string()) -> [string()].
+dir_files(Path) ->
+  case filelib:is_dir(Path) of
+    true ->
+      filelib:wildcard(filename:join(Path, "**"));
+    false ->
+      [Path]
+  end.
