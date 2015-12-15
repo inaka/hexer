@@ -85,3 +85,6 @@ these include:
   Default: `["src", "c_src", "include", "priv", "rebar.config.script", "rebar.config",
   "rebar.lock", "Makefile", "erlang.mk", "README*", "readme*", "LICENSE*", "license*"]`.
 - `licenses`: list of license names (strings). Default: `[]`.
+
+These are the same properties the [rebar3_hex](https://github.com/hexpm/rebar3_hex)
+plugin reads from the same file.
