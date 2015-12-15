@@ -20,3 +20,7 @@ include erlang.mk
 CT_OPTS = -cover test/cover.spec
 
 SHELL_OPTS = -name ${PROJECT}@`hostname` -s sync
+
+escript::
+	mkdir -p bin
+	mv ${PROJECT} bin/.
