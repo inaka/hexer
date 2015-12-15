@@ -38,8 +38,8 @@ Commands:
 
 ## Registering (`user.register`)
 
-Before you can pubish a package to hex.pm you need to have a registered user.
-If you already hace one then skip this section and go to [Authorization](#authorization).
+Before you can publish a package to hex.pm you need to have a registered user.
+If you already have one then skip this section and go to [Authorization](#authorization).
 
 Running `hexer user.register` will bring up a prompt asking for an email address,
 a username and a password. Once you enter all this information if there is any
@@ -63,8 +63,8 @@ When publishing a package, `hexer` extracts information from the
 
 All dependencies are extracted from the `Makefile`, but **only** those that are
 configured as **hex packages** are included in the published package. This means
-that you need to make sure that all libraries your package depends on should
-exist as a hex package and specified in the `Makefile` as:
+that you need to make sure that all libraries your package depends on exist as
+a hex package and specified in the `Makefile` as:
 
 ```
 dep_name = hex 0.0.1
