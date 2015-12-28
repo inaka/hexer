@@ -80,8 +80,9 @@ publish(AppDir, Name, Version, Deps, Details) ->
   Maintainers = maps:get(maintainers, Details, []),
   Licenses    = maps:get(licenses, Details, []),
   Links       = maps:get(links, Details, []),
+  PackageName = maps:get(pkg_name, Details, Name),
 
-  Optional = #{ app          => Name
+  Optional = #{ app          => PackageName
               , requirements => Deps
               , maintainers  => Maintainers
               , precompiled  => false
