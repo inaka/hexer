@@ -11,5 +11,7 @@ rel/example_project
 .erlang.mk
 hexer.d
 logs
+bin/
+hexer.d
 hexer.config
 elvis
