@@ -86,6 +86,7 @@ these include:
   "rebar.lock", "Makefile", "erlang.mk", "README*", "readme*", "LICENSE*", "license*"]`.
 - `licenses`: list of license names (strings). Default: `[]`.
 - `pkg_name`: set a new package name for avoid name collisions. Default: `ebin/*.app or src/*.app.src name value`.
+- `build_tools`: list of available build tools . Default: `["make"]`.
 
 These are the same properties the [rebar3_hex](https://github.com/hexpm/rebar3_hex)
 plugin reads from the same file.
