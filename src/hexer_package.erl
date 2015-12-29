@@ -76,11 +76,11 @@ publish(AppDir, Name, Version, Deps, Details) ->
   FilePaths   = maps:get(files, Details, default_files()),
   Files       = hexer_utils:find_all(FilePaths, AppDir),
   Filenames   = [F || {_, F} <- Files],
-
   Maintainers = maps:get(maintainers, Details, []),
   Licenses    = maps:get(licenses, Details, []),
   Links       = maps:get(links, Details, []),
   PackageName = maps:get(pkg_name, Details, Name),
+  BuildTools  = maps:get(build_tools, Details, []),
 
   Optional = #{ app          => PackageName
               , requirements => Deps
@@ -91,7 +91,7 @@ publish(AppDir, Name, Version, Deps, Details) ->
               , files        => Files
               , licenses     => Licenses
               , links        => Links
-              , build_tools  => [<<"make">>]
+              , build_tools  => BuildTools
               },
   EmptyValue = fun(_, "") -> false; (_, _) -> true end,
   OptionalFiltered = maps:filter(EmptyValue, Optional),

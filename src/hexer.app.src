@@ -15,6 +15,7 @@
    {pkg_name, hexer},
    {maintainers, ["Inaka"]},
    {licenses, ["Apache 2.0"]},
-   {links, [{"Github", "https://github.com/inaka/hexer"}]}
+   {links, [{"Github", "https://github.com/inaka/hexer"}]},
+   {build_tools, ["make"]}
   ]
 }.
