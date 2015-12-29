@@ -82,7 +82,7 @@ publish(AppDir, Name, Version, Deps, Details) ->
   PackageName = maps:get(pkg_name, Details, Name),
   BuildTools  = maps:get(build_tools, Details, []),
 
-  Optional = #{ app          => PackageName
+  Optional = #{ app          => Name
               , requirements => Deps
               , maintainers  => Maintainers
               , precompiled  => false
@@ -95,11 +95,11 @@ publish(AppDir, Name, Version, Deps, Details) ->
               },
   EmptyValue = fun(_, "") -> false; (_, _) -> true end,
   OptionalFiltered = maps:filter(EmptyValue, Optional),
-  Mandatory = #{name => Name, version => Version},
+  Mandatory = #{name => PackageName, version => Version},
   Meta = maps:merge(Mandatory, OptionalFiltered),
 
   {ok, APIKey} = hexer_config:api_key(),
-  hexer_utils:print("Publishing ~s ~s", [Name, Version]),
+  hexer_utils:print("Publishing ~s ~s", [PackageName, Version]),
   hexer_utils:print("  Dependencies:~n    ~s", [format_deps(Deps)]),
   hexer_utils:print("  Included files:~n    ~s"
                    , [string:join(Filenames, "\n    ")]
