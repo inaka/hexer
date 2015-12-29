@@ -82,7 +82,7 @@ publish(AppDir, Name, Version, Deps, Details) ->
   PackageName = maps:get(pkg_name, Details, Name),
   BuildTools  = maps:get(build_tools, Details, []),
 
-  Optional = #{ app          => PackageName
+  Optional = #{ app          => Name
               , requirements => Deps
               , maintainers  => Maintainers
               , precompiled  => false
