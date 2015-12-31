@@ -128,7 +128,7 @@ upload_package(APIKey, Name, Version, Meta, Files) ->
 default_files() ->
   [ "src", "c_src", "include", "priv"
   , "rebar.config.script", "rebar.config", "rebar.lock"
-  , "Makefile", "erlang.mk"
+  , "Makefile", "Emakefile", "erlang.mk"
   , "README*", "readme*"
   , "LICENSE*", "license*"
   ].
