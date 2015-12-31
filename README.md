@@ -83,7 +83,7 @@ these include:
   Default: `[]`.
 - `files`: list of files and folders (strings) that should be included in the package.
   Default: `["src", "c_src", "include", "priv", "rebar.config.script", "rebar.config",
-  "rebar.lock", "Makefile", "Emakefile" "erlang.mk", "README*", "readme*", "LICENSE*", "license*"]`.
+  "rebar.lock", "Makefile", "Emakefile", "erlang.mk", "README*", "readme*", "LICENSE*", "license*"]`.
 - `licenses`: list of license names (strings). Default: `[]`.
 - `pkg_name`: set a new package name for avoid name collisions. Default: `ebin/*.app or src/*.app.src name value`.
 - `build_tools`: list of available build tools . Default: `["make"]`.
