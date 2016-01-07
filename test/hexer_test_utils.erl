@@ -9,6 +9,9 @@
         , wait_receive/2
         ]).
 
+-type config() :: proplists:proplist().
+-export_type([config/0]).
+
 -spec all(atom()) -> [atom()].
 all(Module) ->
   ExcludedFuns = [module_info, init_per_suite, end_per_suite],
