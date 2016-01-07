@@ -1,6 +1,6 @@
 -module(hexer_options_SUITE).
 
--include_lib("mixer/include/mixer.hrl").
+-include_lib("inaka_mixer/include/mixer.hrl").
 -mixin([{ hexer_test_utils
         , [ init_per_suite/1
           , end_per_suite/1
