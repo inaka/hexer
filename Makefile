@@ -7,9 +7,9 @@ dep_shotgun = hex 0.1.15
 
 TEST_DEPS = katana inaka_mixer meck
 
-dep_katana 			= hex 0.2.18
+dep_katana      = hex 0.2.18
 dep_inaka_mixer = hex 0.1.5
-dep_meck   			= hex 0.8.4
+dep_meck        = hex 0.8.4
 
 SHELL_DEPS = sync
 
