@@ -73,7 +73,7 @@ error(Error) -> error("~p", [Error]).
 error(Message, Args) ->
   io:format("Error: " ++ Message ++ "~n", Args).
 
--spec create_tar(atom(), string(), map(), [any()]) ->
+-spec create_tar(atom(), string(), map(), [{string(), string()}]) ->
   {ok, binary()} | {error, any()}.
 create_tar(Name, Version, Meta, Files) ->
   ContentsPath = io_lib:format("~s-~s-contents.tar.gz", [Name, Version]),
@@ -135,7 +135,7 @@ encode_term(Meta) ->
   Data = lists:map(Fun, maps:to_list(Meta)),
   iolist_to_binary(Data).
 
--spec binarify(any()) -> boolean() | binary() | [any()] | {any(), any()}.
+-spec binarify(any()) -> boolean() | binary() | [] | {any(), any()}.
 binarify(Term) when is_boolean(Term) ->
     Term;
 binarify(Term) when is_atom(Term) ->
