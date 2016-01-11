@@ -1,5 +1,19 @@
 # Change Log
 
+## [0.1.0](https://github.com/inaka/hexer/tree/0.1.0) (2016-01-11)
+[Full Changelog](https://github.com/inaka/hexer/compare/0.0.1...0.1.0)
+
+**Merged pull requests:**
+
+- 'files' in metadata should be a list of binaries [\#29](https://github.com/inaka/hexer/pull/29) ([elbrujohalcon](https://github.com/elbrujohalcon))
+
+## [0.0.1](https://github.com/inaka/hexer/tree/0.0.1) (2016-01-08)
+[Full Changelog](https://github.com/inaka/hexer/compare/stable...0.0.1)
+
+**Merged pull requests:**
+
+- Publish this project on hex.pm [\#26](https://github.com/inaka/hexer/pull/26) ([elbrujohalcon](https://github.com/elbrujohalcon))
+
 ## [stable](https://github.com/inaka/hexer/tree/stable) (2016-01-07)
 **Implemented enhancements:**
 

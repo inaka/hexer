@@ -2,7 +2,7 @@
   application, hexer,
   [
    {description, "Standalone command-line interface for hex.pm"},
-   {vsn, "0.0.1"},
+   {vsn, "0.1.0"},
    { applications
    , [ kernel
      , stdlib
@@ -16,6 +16,6 @@
    {maintainers, ["Inaka"]},
    {licenses, ["Apache 2.0"]},
    {links, [{"Github", "https://github.com/inaka/hexer"}]},
-   {build_tools, ["make"]}
+   {build_tools, ["erlang.mk"]}
   ]
 }.
