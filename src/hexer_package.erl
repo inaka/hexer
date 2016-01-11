@@ -36,7 +36,7 @@ publish() ->
                     , applications => [atom()]
                     , maintainers  => [string()]
                     , licenses     => [string()]
-                    , files        => [string()] %% Files to be included
+                    , files        => [binary()] %% Files to be included
                     , links        => [{Label :: string(), Label :: string()}]
                     }.
 
@@ -75,7 +75,7 @@ publish(AppDir, Name, Version, Deps, Details) ->
   Description = list_to_binary(maps:get(description, Details, "")),
   FilePaths   = maps:get(files, Details, default_files()),
   Files       = hexer_utils:find_all(FilePaths, AppDir),
-  Filenames   = [F || {_, F} <- Files],
+  Filenames   = [list_to_binary(F) || {F, _} <- Files],
   Maintainers = maps:get(maintainers, Details, []),
   Licenses    = maps:get(licenses, Details, []),
   Links       = maps:get(links, Details, []),
@@ -88,7 +88,7 @@ publish(AppDir, Name, Version, Deps, Details) ->
               , precompiled  => false
               , parameters   => []
               , description  => Description
-              , files        => Files
+              , files        => Filenames
               , licenses     => Licenses
               , links        => Links
               , build_tools  => BuildTools
@@ -101,9 +101,11 @@ publish(AppDir, Name, Version, Deps, Details) ->
   {ok, APIKey} = hexer_config:api_key(),
   hexer_utils:print("Publishing ~s ~s", [PackageName, Version]),
   hexer_utils:print("  Dependencies:~n    ~s", [format_deps(Deps)]),
-  hexer_utils:print("  Included files:~n    ~s"
-                   , [string:join(Filenames, "\n    ")]
-                   ),
+  hexer_utils:print("  Included files:", []),
+  lists:foreach(
+    fun(Filename) ->
+      hexer_utils:print("    ~s", [Filename])
+    end, Filenames),
   hexer_utils:print( "Before publishing, please read Hex CoC: "
                      "https://hex.pm/docs/codeofconduct"
                    , []
@@ -115,7 +117,8 @@ publish(AppDir, Name, Version, Deps, Details) ->
       hexer_utils:print("Goodbye...")
   end.
 
--spec upload_package(string(), atom(), string(), map(), [any()]) ->
+-spec upload_package(
+  string(), atom(), string(), map(), [{string(), string()}]) ->
   ok | {error, any()}.
 upload_package(APIKey, Name, Version, Meta, Files) ->
   {ok, Tar} = hexer_utils:create_tar(Name, Version, Meta, Files),
