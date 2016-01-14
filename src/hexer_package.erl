@@ -75,9 +75,9 @@ validate_app_details(Details) ->
 
 -spec transform_vsn_git_to_tag(any()) -> any().
 transform_vsn_git_to_tag(git) ->
-  GetGitTag = os:cmd("git describe --abbrev=0"),
-  case list_to_binary(GetGitTag) of
-    <<"fatal: ", Reason/binary>> ->
+  GetGitTag = hexer_utils:cmd("git describe --abbrev=0 --tags"),
+  case GetGitTag of
+    "fatal: " ++ Reason ->
       throw({hexer_package, {bad_github_tag, Reason}});
     TagOK ->
       TagOK

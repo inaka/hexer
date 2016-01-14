@@ -88,8 +88,10 @@ publish(_Config) ->
                  "  , [ {vsn, git} ]"
                  "}.">>,
   ok = file:write_file("src/hexer.app.src", AppSrcBin3),
+  OsFalseFun = fun(_) ->  "fatal: " ++ (ErrorTag = "No Tag!!") end,
+  meck:expect(hexer_utils, cmd, OsFalseFun),
   ok = try ok = hexer_package:publish(), error
-       catch _:{hexer_package, {bad_github_tag, _Error}} -> ok
+       catch _:{hexer_package, {bad_github_tag, ErrorTag}} -> ok
        end,
 
 
