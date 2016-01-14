@@ -37,8 +37,6 @@ check_output(Regex, Fun) ->
 
   lists:any(MatchFun, Lines).
 
-
-
 -spec wait_receive(any(), timeout()) -> ok | timeout.
 wait_receive(Value, Timeout) ->
   receive Value -> ok
