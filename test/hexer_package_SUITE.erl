@@ -64,7 +64,8 @@ publish(_Config) ->
   ct:comment("Create dummy files"),
   ok = file:make_dir("src"),
   AppSrcBin = <<"{application, hexer, [{vsn, \"0.0.1\"}]}.">>,
-  ok = file:write_file("src/hexer.app.src", AppSrcBin),
+  HexerAppSrcFileName = "src/my_app.app.src",
+  ok = file:write_file(HexerAppSrcFileName, AppSrcBin),
   ok = file:write_file("Makefile", <<>>),
 
   ct:comment("Error: No API key"),
@@ -73,15 +74,29 @@ publish(_Config) ->
        end,
 
   ct:comment("Error: has contributors"),
-  AppSrcBin2 = <<"{ application, hexer "
+  AppSrcBin2 = <<"{ application, my_app "
                  "  , [ {vsn, \"0.0.1\"} "
                  "    , {contributors, []}"
                  "    ]"
                  "}.">>,
-  ok = file:write_file("src/hexer.app.src", AppSrcBin2),
+  ok = file:write_file(HexerAppSrcFileName, AppSrcBin2),
   ok = try ok = hexer_package:publish(), error
        catch _:{hexer_package, has_contributors} -> ok
        end,
+
+  ok = file:delete(HexerAppSrcFileName),
+
+  ct:comment("Error: Bad Github tag"),
+  AppSrcBin3 = <<"{ application, my_app "
+                 "  , [ {vsn, git} ]"
+                 "}.">>,
+  ok = file:write_file(HexerAppSrcFileName, AppSrcBin3),
+  OsFalseFun = fun(_) ->  "fatal: " ++ (ErrorTag = "No Tag!!") end,
+  meck:expect(hexer_utils, cmd, OsFalseFun),
+  ok = try ok = hexer_package:publish(), error
+       catch _:{hexer_package, {bad_github_tag, ErrorTag}} -> ok
+       end,
+
 
   meck:expect(hexer_utils, prompt, PromptTrueFun),
 

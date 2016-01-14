@@ -12,6 +12,7 @@
 -export([ find_single_file/1
         , find_all/2
         , create_tar/4
+        , cmd/1
         ]).
 
 -define(OP_PUTC, 0).
@@ -19,6 +20,9 @@
 %%------------------------------------------------------------------------------
 %% Exported functions
 %%------------------------------------------------------------------------------
+-spec cmd(string()) -> string().
+cmd(Parameters) ->
+  os:cmd(Parameters).
 
 -spec prompt(string(), string() | password | boolean) ->
   string() | boolean().
