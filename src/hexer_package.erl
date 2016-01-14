@@ -52,13 +52,17 @@ load_app_info() ->
       {ok, [AppSrc]} = file:consult(Path),
       {application, Name, Details} = AppSrc,
       DetailsMap = maps:from_list(Details),
+      VSN = maps:get(vsn, DetailsMap),
+      Version = transform_vsn_git_to_tag(VSN),
       #{ name    => Name
-       , version => maps:get(vsn, DetailsMap)
+       , version => Version
        , details => maps:remove(vsn, DetailsMap)
        };
     notfound ->
       throw(app_file_not_found)
   end.
+
+
 
 -spec validate_app_details(map()) -> ok | {error, any()}.
 validate_app_details(Details) ->
@@ -68,6 +72,17 @@ validate_app_details(Details) ->
     false ->
       ok
   end.
+
+-spec transform_vsn_git_to_tag(any()) -> any().
+transform_vsn_git_to_tag(git) ->
+  GetGitTag = os:cmd("git describe --abbrev=0"),
+  case list_to_binary(GetGitTag) of
+    <<"fatal: ", Reason/binary>> ->
+      throw({hexer_package, {bad_github_tag, Reason}});
+    TagOK ->
+      TagOK
+  end;
+transform_vsn_git_to_tag(Value) -> Value.
 
 -spec publish(string(), atom(), string(), [hexer_deps:dep()], details()) ->
   ok | {error, any()}.
