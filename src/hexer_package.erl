@@ -137,7 +137,7 @@ publish(AppDir, Name, Version, Deps, Details) ->
   ok | {error, any()}.
 upload_package(APIKey, Name, Version, Meta, Files) ->
   {ok, Tar} = hexer_utils:create_tar(Name, Version, Meta, Files),
-  case hexer_server:publish(APIKey, atom_to_list(Name), Tar) of
+  case hexer_server:publish_package(APIKey, atom_to_list(Name), Tar) of
     ok -> hexer_utils:print("Published ~s ~s", [Name, Version]);
     {error, Error} -> throw(Error)
   end.

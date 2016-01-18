@@ -5,6 +5,7 @@
   , hexer_commands
   , hexer_config
   , hexer_deps
+  , hexer_docs
   , hexer_options
   , hexer_package
   , hexer_server

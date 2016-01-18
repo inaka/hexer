@@ -20,6 +20,7 @@ help() ->
     , { "user.auth", "Generate API key by providing username and password."}
     , { "user.register", "Register new user."}
     , { "publish", "Publish package in hex.pm."}
+    , { "publish.docs", " Publish docs in hex.pm."}
     ],
   getopt:usage(OptSpecList, "hexer", "[command]", Commands).
 
