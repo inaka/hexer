@@ -52,7 +52,6 @@ publish_succeeds(_Config) ->
 
 -spec not_published(hexer_test_utils:config()) -> {comment, string()}.
 not_published(_Config) ->
-  Self = self(),
   ok = run_in_dir(app_directory(), fun generate_api_key/0),
   PromptMockFalseFun = fun(_, _) -> false end,
   meck:expect(hexer_utils, prompt, PromptMockFalseFun),

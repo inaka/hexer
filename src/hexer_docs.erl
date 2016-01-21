@@ -95,11 +95,12 @@ upload_doc(_APIKey, _Name, _Version, []) ->
   throw({hexer_docs, no_files_to_upload});
 upload_doc(APIKey, Name, Version, Files) ->
   Tarball = atom_to_list(Name) ++ "-" ++ Version ++ "-docs.tar.gz",
-  Filenames = [ F || {F, _} <- Files],
-  ok = erl_tar:create(Tarball, Filenames, [compressed]),
+  FilePaths = [{filename:basename(File), AbsPath} || {File, AbsPath} <- Files],
+  ok = erl_tar:create(Tarball, FilePaths, [compressed]),
   {ok, Tar} = file:read_file(Tarball),
   ok = file:delete(Tarball),
   case hexer_server:publish_docs(APIKey, atom_to_list(Name), Version, Tar) of
     ok -> hexer_utils:print("Published Docs ~s ~s", [Name, Version]);
     {error, Error} -> throw(Error)
   end.
+
