@@ -9,70 +9,27 @@
 -spec publish() -> ok | {error, any()}.
 publish() ->
   hexer_utils:print("Publishing..."),
-  %% We need the following information to build the package:
-  %% - App Directory
+  %% We need the following information to upload the docs:
   %% - Name
   %% - Version
-  %% - AppDetails from *.app.src
-  %% - Deps
 
   %% We assume the app's dir is the current directory.
   AppDir = ".",
   #{ name    := Name
    , version := Version
-   } = load_app_info(),
+   } = hexer_utils:load_app_info(),
   publish(AppDir, Name, Version).
 
 %%------------------------------------------------------------------------------
 %% Internal Functions
 %%------------------------------------------------------------------------------
--type details() :: #{ description  => string()
-                    , applications => [atom()]
-                    , maintainers  => [string()]
-                    , licenses     => [string()]
-                    , files        => [binary()] %% Files to be included
-                    , links        => [{Label :: string(), Label :: string()}]
-                    }.
-
--type app_info() :: #{ name    => atom()
-                     , version => string()
-                     , details => details()
-                     }.
-
--spec load_app_info() -> app_info().
-load_app_info() ->
-  case hexer_utils:find_single_file(["ebin/*.app", "src/*.app.src"]) of
-    {ok, Path} ->
-      {ok, [AppSrc]} = file:consult(Path),
-      {application, Name, Details} = AppSrc,
-      DetailsMap = maps:from_list(Details),
-      VSN = maps:get(vsn, DetailsMap),
-      Version = transform_vsn_git_to_tag(VSN),
-      #{ name    => Name
-       , version => Version
-       };
-    notfound ->
-      throw(app_file_not_found)
-  end.
-
--spec transform_vsn_git_to_tag(any()) -> any().
-transform_vsn_git_to_tag(git) ->
-  GetGitTag = hexer_utils:cmd("git describe --abbrev=0 --tags"),
-  case GetGitTag of
-    "fatal: " ++ Reason ->
-      throw({hexer_docs, {bad_github_tag, Reason}});
-    TagOK ->
-      TagOK
-  end;
-transform_vsn_git_to_tag(Value) -> Value.
-
 -spec publish(string(), atom(), string()) ->
   ok | {error, any()}.
 publish(AppDir, Name, Version) ->
   Files       = hexer_utils:find_all(["doc"], AppDir),
   Filenames   = [list_to_binary(F) || {F, _} <- Files],
   {ok, APIKey} = hexer_config:api_key(),
-  hexer_utils:print("Publishing Docs ~s", [Version]),
+  hexer_utils:print("Publishing Docs for ~p ~s", [Name, Version]),
   lists:foreach(
     fun(Filename) ->
       hexer_utils:print("    ~s", [Filename])

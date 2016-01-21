@@ -13,9 +13,28 @@
         , find_all/2
         , create_tar/4
         , cmd/1
+        , load_app_info/0
         ]).
 
 -define(OP_PUTC, 0).
+
+%%------------------------------------------------------------------------------
+%% Exported Types
+%%------------------------------------------------------------------------------
+-type app_info() :: #{ name    => atom()
+                     , version => string()
+                     , details => details()
+                     }.
+
+-type details() :: #{ description  => string()
+                    , applications => [atom()]
+                    , maintainers  => [string()]
+                    , licenses     => [string()]
+                    , files        => [binary()] %% Files to be included
+                    , links        => [{Label :: string(), Label :: string()}]
+                    }.
+
+-export_type([details/0, app_info/0]).
 
 %%------------------------------------------------------------------------------
 %% Exported functions
@@ -176,3 +195,31 @@ dir_files(Path) ->
     false ->
       [Path]
   end.
+
+-spec load_app_info() -> app_info().
+load_app_info() ->
+  case hexer_utils:find_single_file(["ebin/*.app", "src/*.app.src"]) of
+    {ok, Path} ->
+      {ok, [AppSrc]} = file:consult(Path),
+      {application, Name, Details} = AppSrc,
+      DetailsMap = maps:from_list(Details),
+      VSN = maps:get(vsn, DetailsMap),
+      Version = transform_vsn_git_to_tag(VSN),
+      #{ name    => Name
+       , version => Version
+       , details => maps:remove(vsn, DetailsMap)
+       };
+    notfound ->
+      throw(app_file_not_found)
+  end.
+
+-spec transform_vsn_git_to_tag(any()) -> any().
+transform_vsn_git_to_tag(git) ->
+  GetGitTag = hexer_utils:cmd("git describe --abbrev=0 --tags"),
+  case GetGitTag of
+    "fatal: " ++ Reason ->
+      throw({hexer_utils, {bad_github_tag, Reason}});
+    TagOK ->
+      TagOK
+  end;
+transform_vsn_git_to_tag(Value) -> Value.
