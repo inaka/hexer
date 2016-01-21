@@ -21,7 +21,7 @@ publish() ->
   #{ name    := Name
    , version := Version
    , details := Details
-   } = load_app_info(),
+   } = hexer_utils:load_app_info(),
   Deps = hexer_deps:resolve(AppDir),
   case validate_app_details(Details) of
     ok -> publish(AppDir, Name, Version, Deps, Details);
@@ -32,38 +32,6 @@ publish() ->
 %% Internal Functions
 %%------------------------------------------------------------------------------
 
--type details() :: #{ description  => string()
-                    , applications => [atom()]
-                    , maintainers  => [string()]
-                    , licenses     => [string()]
-                    , files        => [binary()] %% Files to be included
-                    , links        => [{Label :: string(), Label :: string()}]
-                    }.
-
--type app_info() :: #{ name    => atom()
-                     , version => string()
-                     , details => details()
-                     }.
-
--spec load_app_info() -> app_info().
-load_app_info() ->
-  case hexer_utils:find_single_file(["ebin/*.app", "src/*.app.src"]) of
-    {ok, Path} ->
-      {ok, [AppSrc]} = file:consult(Path),
-      {application, Name, Details} = AppSrc,
-      DetailsMap = maps:from_list(Details),
-      VSN = maps:get(vsn, DetailsMap),
-      Version = transform_vsn_git_to_tag(VSN),
-      #{ name    => Name
-       , version => Version
-       , details => maps:remove(vsn, DetailsMap)
-       };
-    notfound ->
-      throw(app_file_not_found)
-  end.
-
-
-
 -spec validate_app_details(map()) -> ok | {error, any()}.
 validate_app_details(Details) ->
   case maps:is_key(contributors, Details) of
@@ -73,19 +41,12 @@ validate_app_details(Details) ->
       ok
   end.
 
--spec transform_vsn_git_to_tag(any()) -> any().
-transform_vsn_git_to_tag(git) ->
-  GetGitTag = hexer_utils:cmd("git describe --abbrev=0 --tags"),
-  case GetGitTag of
-    "fatal: " ++ Reason ->
-      throw({hexer_package, {bad_github_tag, Reason}});
-    TagOK ->
-      TagOK
-  end;
-transform_vsn_git_to_tag(Value) -> Value.
-
--spec publish(string(), atom(), string(), [hexer_deps:dep()], details()) ->
-  ok | {error, any()}.
+-spec publish( string()
+             , atom()
+             , string()
+             , [hexer_deps:dep()]
+             , hexer_utils:details()
+             ) -> ok | {error, any()}.
 publish(AppDir, Name, Version, Deps, Details) ->
   Description = list_to_binary(maps:get(description, Details, "")),
   FilePaths   = maps:get(files, Details, default_files()),
@@ -137,7 +98,7 @@ publish(AppDir, Name, Version, Deps, Details) ->
   ok | {error, any()}.
 upload_package(APIKey, Name, Version, Meta, Files) ->
   {ok, Tar} = hexer_utils:create_tar(Name, Version, Meta, Files),
-  case hexer_server:publish(APIKey, atom_to_list(Name), Tar) of
+  case hexer_server:publish_package(APIKey, atom_to_list(Name), Tar) of
     ok -> hexer_utils:print("Published ~s ~s", [Name, Version]);
     {error, Error} -> throw(Error)
   end.

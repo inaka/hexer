@@ -2,7 +2,8 @@
 
 -export([ new_api_key/3
         , create_user/3
-        , publish/3
+        , publish_package/3
+        , publish_docs/4
         ]).
 
 %%------------------------------------------------------------------------------
@@ -43,9 +44,20 @@ create_user(Username, Email, Password) ->
       {error, Error}
   end.
 
--spec publish(string(), string(), binary()) -> ok | {error, any()}.
-publish(APIKey, Name, Tar) ->
+-spec publish_package(string(), string(), binary()) -> ok | {error, any()}.
+publish_package(APIKey, Name, Tar) ->
   Path = string:join(["/api/packages", Name, "releases"], "/"),
+  publish(APIKey, Path, Tar).
+
+-spec publish_docs(string(), string(), string(), binary()) ->
+  ok | {error, any()}.
+publish_docs(APIKey, Name, Version, Tar) ->
+  Path =
+    string:join(["/api/packages", Name , "releases", Version , "docs"], "/"),
+  publish(APIKey, Path, Tar).
+
+-spec publish(string(), string(), binary()) -> ok | {error, any()}.
+publish(APIKey, Path, Tar) ->
   case post(APIKey, Path, Tar) of
     {ok, #{status_code := StatusCode}}
       when 200 =< StatusCode, StatusCode < 300 ->
