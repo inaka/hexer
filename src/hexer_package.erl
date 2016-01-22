@@ -36,7 +36,7 @@ validate_hex_dependencies(Deps) ->
     []    -> ok;
     NoHexDeps ->
       FormatedDeps = format_deps(NoHexDeps),
-      Description  = "Error: No Hex Dependencys in Makefile:~n  ~s",
+      Description  = "Dependencies not published in hex.pm:~n  ~s",
       hexer_utils:error(Description, [FormatedDeps]),
       throw({hexer_package, no_hex_dependency})
   end.
