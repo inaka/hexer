@@ -38,7 +38,7 @@ create_hexer_mk(HexerMk) ->
 create_dep_vsn_tuple(Dep, Fetch) ->
   case string:tokens(Fetch, [$\s, $\t]) of
     ["hex", Version | _] -> {to_dep_atom(Dep), Version};
-    _NonHexVersion       -> {no_hex_dependency, Fetch}
+    NonHexVersion        -> {no_hex_dependency, string:join(NonHexVersion, " ")}
   end.
 
 to_dep_atom(Dep) ->
