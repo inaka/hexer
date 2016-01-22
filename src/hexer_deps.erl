@@ -15,8 +15,7 @@ resolve(AppDir) ->
     DepStrings =
       [ string:tokens(DepLine, [$=])
       || DepLine <- string:tokens(Output, [$|, $\n])],
-    [ {to_dep_atom(Dep), hex_version(Fetch)}
-    || [Dep, Fetch] <- DepStrings, is_hex_dep(Fetch)]
+    [create_dep_vsn_tuple(Dep, Fetch) || [Dep, Fetch] <- DepStrings]
   after
     _ = file:delete(HexerMk)
   end.
@@ -27,22 +26,20 @@ create_hexer_mk(HexerMk) ->
     "\n"
     "THE_DEPS = "
       "$(foreach dep,"
-        "$(filter-out $(IGNORE_DEPS),$(BUILD_DEPS) $(DEPS)),"
+        "$(filter-out $(IGNORE_DEPS),$(DEPS)),"
         "$(dep) = $(dep_$(dep))\\|)\n"
     "\n"
     "list-deps:\n"
     "\t@echo $(THE_DEPS)\n",
   ok = file:write_file(HexerMk, Contents).
 
-is_hex_dep(Fetch) ->
+-spec create_dep_vsn_tuple(string(), string()) ->
+  dep() | {no_hex_dependency, string()}.
+create_dep_vsn_tuple(Dep, Fetch) ->
   case string:tokens(Fetch, [$\s, $\t]) of
-    ["hex" | _] -> true;
-    _ -> false
+    ["hex", Version | _] -> {to_dep_atom(Dep), Version};
+    _NonHexVersion       -> {no_hex_dependency, Fetch}
   end.
-
-hex_version(Fetch) ->
-  ["hex", Version | _] = string:tokens(Fetch, [$\s, $\t]),
-  Version.
 
 to_dep_atom(Dep) ->
   list_to_atom([Char || Char <- Dep, Char /= $\s]).
