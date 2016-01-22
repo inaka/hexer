@@ -7,6 +7,7 @@
         , print/2
         , error/1
         , error/2
+        , format_deps/1
         ]).
 
 -export([ find_single_file/1
@@ -223,3 +224,8 @@ transform_vsn_git_to_tag(git) ->
       TagOK
   end;
 transform_vsn_git_to_tag(Value) -> Value.
+
+-spec format_deps([hexer_deps:dep()]) -> string().
+format_deps(Deps) ->
+  DepsStr = [atom_to_list(Name) ++ " " ++ Version || {Name, Version} <- Deps],
+  string:join(DepsStr, "\n  ").

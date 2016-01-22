@@ -35,7 +35,7 @@ validate_hex_dependencies(Deps) ->
   case [{no_hex_dependency, Dep} || {no_hex_dependency, Dep} <- Deps] of
     []    -> ok;
     NoHexDeps ->
-      FormatedDeps = format_deps(NoHexDeps),
+      FormatedDeps = hexer_utils:format_deps(NoHexDeps),
       Description  = "Dependencies not published in hex.pm:~n  ~s",
       hexer_utils:error(Description, [FormatedDeps]),
       throw({hexer_package, no_hex_dependency})
@@ -85,7 +85,7 @@ publish(AppDir, Name, Version, Deps, Details) ->
 
   {ok, APIKey} = hexer_config:api_key(),
   hexer_utils:print("Publishing ~s ~s", [PackageName, Version]),
-  hexer_utils:print("  Dependencies:~n  ~s", [format_deps(Deps)]),
+  hexer_utils:print("  Dependencies:~n  ~s", [hexer_utils:format_deps(Deps)]),
   hexer_utils:print("  Included files:", []),
   lists:foreach(
     fun(Filename) ->
@@ -121,7 +121,4 @@ default_files() ->
   , "LICENSE*", "license*"
   ].
 
--spec format_deps([hexer_deps:dep()]) -> string().
-format_deps(Deps) ->
-  DepsStr = [atom_to_list(Name) ++ " " ++ Version || {Name, Version} <- Deps],
-  string:join(DepsStr, "\n  ").
+
