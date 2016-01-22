@@ -23,20 +23,29 @@ publish() ->
    , details := Details
    } = hexer_utils:load_app_info(),
   Deps = hexer_deps:resolve(AppDir),
-  case validate_app_details(Details) of
-    ok -> publish(AppDir, Name, Version, Deps, Details);
-    {error, Error} -> throw(Error)
-  end.
+  ok = validate_app_details(Details),
+  ok = validate_hex_dependencies(Deps),
+  publish(AppDir, Name, Version, Deps, Details).
 
 %%------------------------------------------------------------------------------
 %% Internal Functions
 %%------------------------------------------------------------------------------
+-spec validate_hex_dependencies([tuple()]) -> ok | {error, any()}.
+validate_hex_dependencies(Deps) ->
+  case [{no_hex_dependency, Dep} || {no_hex_dependency, Dep} <- Deps] of
+    []    -> ok;
+    NoHexDeps ->
+      FormatedDeps = format_deps(NoHexDeps),
+      Description  = "Dependencies not published in hex.pm:~n  ~s",
+      hexer_utils:error(Description, [FormatedDeps]),
+      throw({hexer_package, no_hex_dependency})
+  end.
 
 -spec validate_app_details(map()) -> ok | {error, any()}.
 validate_app_details(Details) ->
   case maps:is_key(contributors, Details) of
     true ->
-      {error, {hexer_package, has_contributors}};
+       throw({hexer_package, has_contributors});
     false ->
       ok
   end.
@@ -76,7 +85,7 @@ publish(AppDir, Name, Version, Deps, Details) ->
 
   {ok, APIKey} = hexer_config:api_key(),
   hexer_utils:print("Publishing ~s ~s", [PackageName, Version]),
-  hexer_utils:print("  Dependencies:~n    ~s", [format_deps(Deps)]),
+  hexer_utils:print("  Dependencies:~n  ~s", [format_deps(Deps)]),
   hexer_utils:print("  Included files:", []),
   lists:foreach(
     fun(Filename) ->
@@ -115,4 +124,4 @@ default_files() ->
 -spec format_deps([hexer_deps:dep()]) -> string().
 format_deps(Deps) ->
   DepsStr = [atom_to_list(Name) ++ " " ++ Version || {Name, Version} <- Deps],
-  string:join(DepsStr, "\n    ").
+  string:join(DepsStr, "\n  ").
