@@ -15,3 +15,4 @@
 
 -spec init_per_suite(config()) -> config().
 init_per_suite(Config) -> [{application, hexer} | Config].
+

@@ -7,6 +7,7 @@
         , print/2
         , error/1
         , error/2
+        , format_deps/1
         ]).
 
 -export([ find_single_file/1
@@ -39,7 +40,7 @@
 %%------------------------------------------------------------------------------
 %% Exported functions
 %%------------------------------------------------------------------------------
--spec cmd(string()) -> string().
+-spec cmd(iodata()) -> string().
 cmd(Parameters) ->
   os:cmd(Parameters).
 
@@ -223,3 +224,10 @@ transform_vsn_git_to_tag(git) ->
       TagOK
   end;
 transform_vsn_git_to_tag(Value) -> Value.
+
+-spec format_deps([hexer_deps:requirement()]) -> string().
+format_deps(Deps) ->
+  DepsStr =
+    [ Name ++ " " ++ Vsn
+    || {_, [ {<<"app">> , Name}, {<<"requirement">>, Vsn}]} <- Deps],
+  string:join(DepsStr, "\n  ").
