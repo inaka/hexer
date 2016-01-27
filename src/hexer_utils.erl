@@ -40,7 +40,7 @@
 %%------------------------------------------------------------------------------
 %% Exported functions
 %%------------------------------------------------------------------------------
--spec cmd(string()) -> string().
+-spec cmd(iolist()) -> string().
 cmd(Parameters) ->
   os:cmd(Parameters).
 
@@ -225,7 +225,9 @@ transform_vsn_git_to_tag(git) ->
   end;
 transform_vsn_git_to_tag(Value) -> Value.
 
--spec format_deps([hexer_deps:dep()]) -> string().
+-spec format_deps([hexer_deps:requirement()]) -> string().
 format_deps(Deps) ->
-  DepsStr = [atom_to_list(Name) ++ " " ++ Version || {Name, Version} <- Deps],
+  DepsStr =
+    [ Name ++ " " ++ Vsn
+    || {_, [ {<<"app">> , Name}, {<<"requirement">>, Vsn}]} <- Deps],
   string:join(DepsStr, "\n  ").

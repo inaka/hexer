@@ -24,22 +24,11 @@ publish() ->
    } = hexer_utils:load_app_info(),
   Deps = hexer_deps:resolve(AppDir),
   ok = validate_app_details(Details),
-  ok = validate_hex_dependencies(Deps),
   publish(AppDir, Name, Version, Deps, Details).
 
 %%------------------------------------------------------------------------------
 %% Internal Functions
 %%------------------------------------------------------------------------------
--spec validate_hex_dependencies([tuple()]) -> ok | {error, any()}.
-validate_hex_dependencies(Deps) ->
-  case [{no_hex_dependency, Dep} || {no_hex_dependency, Dep} <- Deps] of
-    []    -> ok;
-    NoHexDeps ->
-      FormatedDeps = hexer_utils:format_deps(NoHexDeps),
-      Description  = "Dependencies not published in hex.pm:~n  ~s",
-      hexer_utils:error(Description, [FormatedDeps]),
-      throw({hexer_package, no_hex_dependency})
-  end.
 
 -spec validate_app_details(map()) -> ok | {error, any()}.
 validate_app_details(Details) ->
