@@ -64,18 +64,17 @@ validate_hex_dependencies(Deps) ->
 -spec new_requeriment_meta(dep(), list()) -> requirement().
 new_requeriment_meta({DepName, Version}, DepDirList) ->
   FunMatch = fun(X) -> filename:basename(X) == atom_to_list(DepName) end,
-  [NoHexDeps] = lists:filter(FunMatch , DepDirList),
-  Path = [NoHexDeps, "/src/*app.src"],
-  AppSrcPathRaw = hexer_utils:cmd(["ls ", Path]),
+  [DepPath] = lists:filter(FunMatch , DepDirList),
+  AppSrcPathRaw =  filelib:wildcard([DepPath, "/src/*app.src"]),
   AppSrcPath = string:tokens(AppSrcPathRaw, [$|, $\n]),
   { DepName,
-    %It's probably that DepName =/= AppName in app.src
-    [ {<<"app">> , create_requeriment_meta(AppSrcPath)}
+    %It's possible that DepName =/= AppName in app.src
+    [ {<<"app">> , get_real_app_name(AppSrcPath)}
     , {<<"requirement">>, Version}
     , {<<"optional">>, false}
     ]}.
 
-create_requeriment_meta(AppSrcPath) ->
+get_real_app_name(AppSrcPath) ->
   {ok, [MetaData]} = file:consult(AppSrcPath),
   { application, ApplicationName , _} = MetaData,
   ApplicationName.
