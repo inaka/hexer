@@ -1,6 +1,6 @@
 -module(hexer_deps).
 
--export([resolve/1, new_requeriment_meta/2]).
+-export([resolve/1]).
 
 -type dep() :: { Name :: atom(), Version :: string()}.
 -type requirement() :: { DepName :: atom(), Data :: [{binary(), any()}]}.
