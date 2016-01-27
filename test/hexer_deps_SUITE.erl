@@ -65,8 +65,7 @@ resolving_no_hex_deps(_Config) ->
     "DEPS = dep1 \n"
      ++ ErrorDependency ++ "\n"
     ),
-  %"dep_dep1 = " ++ TrimedDep = ErrorDependency,
-    ok = try _ = hexer_deps:resolve("."), error
+  ok = try _ = hexer_deps:resolve("."), error
        catch _:{hexer_deps, no_hex_dependency} -> ok
        end,
 
