@@ -1,7 +1,9 @@
+%%% @doc escript for hexer
 -module(hexer).
 
 -export([main/1]).
 
+%% @doc entry point for escript
 -spec main([string()]) -> ok.
 main(Args) ->
   {ok, _} = application:ensure_all_started(hexer),

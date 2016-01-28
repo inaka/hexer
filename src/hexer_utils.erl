@@ -1,3 +1,4 @@
+%%% @hidden
 -module(hexer_utils).
 
 -compile({no_auto_import, [error/1, error/2]}).

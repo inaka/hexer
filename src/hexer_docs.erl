@@ -1,3 +1,4 @@
+%%% @doc Doc publishing utilities
 -module(hexer_docs).
 
 -export([publish/0]).
@@ -5,7 +6,8 @@
 %%------------------------------------------------------------------------------
 %% API
 %%------------------------------------------------------------------------------
-
+%% @doc publishes the app documentation.
+%%      doc/ folder should already exist.
 -spec publish() -> ok | {error, any()}.
 publish() ->
   hexer_utils:print("Publishing..."),

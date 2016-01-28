@@ -118,7 +118,8 @@ bad_github_tag(_Config) ->
                  "  , [ {vsn, git} ]"
                  "}.">>,
   create_app_src(AppSrcBin3),
-  OsFalseFun = fun(_) ->  "fatal: " ++ (ErrorTag = "No Tag!!") end,
+  ErrorTag = "No Tag!!",
+  OsFalseFun = fun(_) ->  "fatal: " ++ ErrorTag end,
   meck:expect(hexer_utils, cmd, OsFalseFun),
   ok = try ok = hexer_package:publish(), error
        catch _:{hexer_utils, {bad_github_tag, ErrorTag}} -> ok

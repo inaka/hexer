@@ -1,3 +1,4 @@
+%%% @hidden
 -module(hexer_options).
 
 -export([option_spec_list/0]).
