@@ -27,6 +27,7 @@ init_per_testcase(_, Config) ->
 end_per_testcase(_, Config) ->
   meck:unload(hexer_user),
   meck:unload(hexer_package),
+  meck:unload(hexer_docs),
   Config.
 
 -spec main(hexer_test_utils:config()) -> {comment, string()}.
@@ -54,6 +55,10 @@ main(_Config) ->
   ok = hexer:main(["publish"]),
   ok = hexer_test_utils:wait_receive(publish, 500),
 
+  DocsFun = fun() -> Self ! docs end,
+  meck:expect(hexer_docs, publish, DocsFun),
+  ok = hexer:main(["publish.docs"]),
+  ok = hexer_test_utils:wait_receive(docs, 500),
 
   ct:comment("Unexisting command or option should show error & help"),
   OptionArgFun = fun() -> ok = hexer:main(["--something"]) end,
