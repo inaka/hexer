@@ -1,3 +1,4 @@
+%%% @doc User management utilities
 -module(hexer_user).
 
 -export([ auth/0
@@ -7,13 +8,14 @@
 %%------------------------------------------------------------------------------
 %% API
 %%------------------------------------------------------------------------------
-
+%% @doc Generates an auth key for the user
 -spec auth() -> ok | {error, any()}.
 auth() ->
   Username = hexer_utils:prompt("Username: ", "~s"),
   Password = hexer_utils:prompt("Password: ", password),
   generate_key(Username, Password).
 
+%% @doc Registers the user in hex.pm
 -spec 'register'() -> ok | {error, any()}.
 register() ->
   Username = hexer_utils:prompt("Username: ", "~s"),

@@ -1,3 +1,4 @@
+%%% @doc Connection to hex.pm server
 -module(hexer_server).
 
 -export([ new_api_key/3
@@ -9,7 +10,7 @@
 %%------------------------------------------------------------------------------
 %% API
 %%------------------------------------------------------------------------------
-
+%% @doc Generates a new API key
 -spec new_api_key(binary(), string(), string()) ->
   {ok, binary()} | {error, any()}.
 new_api_key(Name, Username, Password) ->
@@ -26,6 +27,7 @@ new_api_key(Name, Username, Password) ->
       {error, Error}
   end.
 
+%% @doc Creates a new user
 -spec create_user(string(), string(), string()) -> ok | {error, any()}.
 create_user(Username, Email, Password) ->
   Body = term_to_binary(#{ <<"username">> => list_to_binary(Username)
@@ -44,11 +46,13 @@ create_user(Username, Email, Password) ->
       {error, Error}
   end.
 
+%% @doc Publishes a package
 -spec publish_package(string(), string(), binary()) -> ok | {error, any()}.
 publish_package(APIKey, Name, Tar) ->
   Path = string:join(["/api/packages", Name, "releases"], "/"),
   publish(APIKey, Path, Tar).
 
+%% @doc Publishes the documentation for an app
 -spec publish_docs(string(), string(), string(), binary()) ->
   ok | {error, any()}.
 publish_docs(APIKey, Name, Version, Tar) ->

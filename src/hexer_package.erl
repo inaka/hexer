@@ -1,3 +1,4 @@
+%%% @doc Package publishing utilities
 -module(hexer_package).
 
 -export([publish/0]).
@@ -5,7 +6,7 @@
 %%------------------------------------------------------------------------------
 %% API
 %%------------------------------------------------------------------------------
-
+%% @doc Publishes the app package.
 -spec publish() -> ok | {error, any()}.
 publish() ->
   hexer_utils:print("Publishing..."),

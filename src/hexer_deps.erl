@@ -1,3 +1,5 @@
+%%% @doc Dependency management utilities.
+%%%      WARNING: This module is bound to erlang.mk
 -module(hexer_deps).
 
 -export([resolve/1]).
@@ -7,6 +9,7 @@
 
 -export_type([requirement/0]).
 
+%% @doc Given an app directory, resolves the app requirements.
 -spec resolve(string()) -> [requirement()].
 resolve(AppDir) ->
   HexerMk = filename:join([AppDir, "hexer.mk"]),
