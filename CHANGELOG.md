@@ -1,20 +1,38 @@
 # Change Log
 
+## [0.2.0](https://github.com/inaka/hexer/tree/0.2.0) (2016-01-28)
+[Full Changelog](https://github.com/inaka/hexer/compare/stable...0.2.0)
+
+**Fixed bugs:**
+
+- Bad formatting for requirements [\#38](https://github.com/inaka/hexer/issues/38)
+- Packages should only be published in hex.pm if all their dependencies are also published there [\#36](https://github.com/inaka/hexer/issues/36)
+- Error Code 500 when hexer try to publish jiffy repository [\#27](https://github.com/inaka/hexer/issues/27)
+
+**Closed issues:**
+
+- Add support for docs [\#32](https://github.com/inaka/hexer/issues/32)
+- HTTP 400 error when using `{vsn, git}` in src/appname.app.src [\#31](https://github.com/inaka/hexer/issues/31)
+
+**Merged pull requests:**
+
+- Fixed bad formatting for requirements [\#40](https://github.com/inaka/hexer/pull/40) ([davecaos](https://github.com/davecaos))
+- \[\#36\] Added hex only for dependencies in Makefile DEPS list [\#39](https://github.com/inaka/hexer/pull/39) ([davecaos](https://github.com/davecaos))
+- \[\#32\] Added publish.docs to hexer [\#37](https://github.com/inaka/hexer/pull/37) ([davecaos](https://github.com/davecaos))
+- \[\#31\] Added transform\_vsn\_git\_to\_tag/1 for {vsn, git} case [\#34](https://github.com/inaka/hexer/pull/34) ([davecaos](https://github.com/davecaos))
+
+## [stable](https://github.com/inaka/hexer/tree/stable) (2016-01-11)
+[Full Changelog](https://github.com/inaka/hexer/compare/0.1.0...stable)
+
 ## [0.1.0](https://github.com/inaka/hexer/tree/0.1.0) (2016-01-11)
 [Full Changelog](https://github.com/inaka/hexer/compare/0.0.1...0.1.0)
 
 **Merged pull requests:**
 
+- Version Bump to 0.1.0 [\#30](https://github.com/inaka/hexer/pull/30) ([elbrujohalcon](https://github.com/elbrujohalcon))
 - 'files' in metadata should be a list of binaries [\#29](https://github.com/inaka/hexer/pull/29) ([elbrujohalcon](https://github.com/elbrujohalcon))
 
 ## [0.0.1](https://github.com/inaka/hexer/tree/0.0.1) (2016-01-08)
-[Full Changelog](https://github.com/inaka/hexer/compare/stable...0.0.1)
-
-**Merged pull requests:**
-
-- Publish this project on hex.pm [\#26](https://github.com/inaka/hexer/pull/26) ([elbrujohalcon](https://github.com/elbrujohalcon))
-
-## [stable](https://github.com/inaka/hexer/tree/stable) (2016-01-07)
 **Implemented enhancements:**
 
 - Add a feature to change pkg\_name value from the \*.app.src to upload package with different names  [\#16](https://github.com/inaka/hexer/issues/16)
@@ -39,6 +57,7 @@
 
 **Merged pull requests:**
 
+- Publish this project on hex.pm [\#26](https://github.com/inaka/hexer/pull/26) ([elbrujohalcon](https://github.com/elbrujohalcon))
 - \[\#24\] Collateral steps to make this project similar to the others at … [\#25](https://github.com/inaka/hexer/pull/25) ([elbrujohalcon](https://github.com/elbrujohalcon))
 - \[\#22\] Added Emakefile to files to upload default list [\#23](https://github.com/inaka/hexer/pull/23) ([davecaos](https://github.com/davecaos))
 - Package name fix [\#21](https://github.com/inaka/hexer/pull/21) ([davecaos](https://github.com/davecaos))

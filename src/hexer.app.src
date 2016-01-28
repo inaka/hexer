@@ -2,7 +2,7 @@
   application, hexer,
   [
    {description, "Standalone command-line interface for hex.pm"},
-   {vsn, "0.1.0"},
+   {vsn, "0.2.0"},
    { applications
    , [ kernel
      , stdlib
