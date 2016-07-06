@@ -68,7 +68,11 @@ publish(AppDir, Name, Version, Deps, Details) ->
               , links        => Links
               , build_tools  => BuildTools
               },
-  EmptyValue = fun(_, "") -> false; (_, _) -> true end,
+  EmptyValue = fun
+                 (requirements, []) -> true;
+                 (_, "") -> false;
+                 (_, _) -> true
+               end,
   OptionalFiltered = maps:filter(EmptyValue, Optional),
   Mandatory = #{name => PackageName, version => Version},
   Meta = maps:merge(Mandatory, OptionalFiltered),
