@@ -98,6 +98,7 @@ post(Username, Password, Path, Body) ->
     Headers = #{ basic_auth         => {Username, Password}
                , <<"Accept">>       => <<"application/vnd.hex+erlang">>
                , <<"Content-Type">> => <<"application/vnd.hex+erlang">>
+               , <<"user-agent">>   => <<"hexer.erl">>
                },
 
     shotgun:post(Conn, Path, Headers, Body, #{})
@@ -113,6 +114,7 @@ post(APIKey, Path, Body) ->
     Headers = #{ <<"Authorization">>  => list_to_binary(APIKey)
                , <<"Accept">>         => <<"application/vnd.hex+erlang">>
                , <<"Content-Type">>   => <<"application/octet-stream">>
+               , <<"user-agent">>     => <<"hexer.erl">>
                },
 
     shotgun:post(Conn, Path, Headers, Body, #{timeout => 10000})

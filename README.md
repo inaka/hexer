@@ -76,7 +76,7 @@ tuple. Additional properties are read from the proplist in the file's specificat
 these include:
 
 - `vsn` (required): the version number of the package, specified as the `vsn` entry.
-- `description`: a description for the project. A string. Default: `""`.
+- `description`: a description for the project. A string. Required.
 - `links`: list of useful or related links. A list of two element tuples, where the
   first element is the link's text and the second the url. Default: `[]`.
 - `maintainers`: list of the project's maintainers names. A list of strings.
@@ -84,7 +84,7 @@ these include:
 - `files`: list of files and folders (strings) that should be included in the package.
   Default: `["src", "c_src", "include", "priv", "rebar.config.script", "rebar.config",
   "rebar.lock", "Makefile", "Emakefile", "erlang.mk", "README*", "readme*", "LICENSE*", "license*"]`.
-- `licenses`: list of license names (strings). Default: `[]`.
+- `licenses`: list of license names (strings). Required.
 - `pkg_name`: set a new package name for avoid name collisions. Default: `ebin/*.app or src/*.app.src name value`.
 - `build_tools`: list of available build tools . Default: `["make"]`.
 
