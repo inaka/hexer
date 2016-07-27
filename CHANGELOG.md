@@ -1,7 +1,24 @@
 # Change Log
 
+## [stable](https://github.com/inaka/hexer/tree/stable) (2016-07-27)
+[Full Changelog](https://github.com/inaka/hexer/compare/stable...stable)
+
+**Closed issues:**
+
+- Hex.pm responds with HTTP code 400 when publishing docs [\#45](https://github.com/inaka/hexer/issues/45)
+- Error: badarg when trying to publish package [\#44](https://github.com/inaka/hexer/issues/44)
+- Badmatch error when attempting to authenticate using a correct username and password [\#28](https://github.com/inaka/hexer/issues/28)
+
+**Merged pull requests:**
+
+- Made compatible with the latest version of hex.mp [\#46](https://github.com/inaka/hexer/pull/46) ([HernanRivasAcosta](https://github.com/HernanRivasAcosta))
+- Don't filter an empty requirements list [\#43](https://github.com/inaka/hexer/pull/43) ([tolbrino](https://github.com/tolbrino))
+
+## [stable](https://github.com/inaka/hexer/tree/stable) (2016-01-28)
+[Full Changelog](https://github.com/inaka/hexer/compare/0.2.0...stable)
+
 ## [0.2.0](https://github.com/inaka/hexer/tree/0.2.0) (2016-01-28)
-[Full Changelog](https://github.com/inaka/hexer/compare/stable...0.2.0)
+[Full Changelog](https://github.com/inaka/hexer/compare/0.1.0...0.2.0)
 
 **Fixed bugs:**
 
@@ -19,10 +36,8 @@
 - Fixed bad formatting for requirements [\#40](https://github.com/inaka/hexer/pull/40) ([davecaos](https://github.com/davecaos))
 - \[\#36\] Added hex only for dependencies in Makefile DEPS list [\#39](https://github.com/inaka/hexer/pull/39) ([davecaos](https://github.com/davecaos))
 - \[\#32\] Added publish.docs to hexer [\#37](https://github.com/inaka/hexer/pull/37) ([davecaos](https://github.com/davecaos))
+- Version Bump to 0.2.0 [\#35](https://github.com/inaka/hexer/pull/35) ([elbrujohalcon](https://github.com/elbrujohalcon))
 - \[\#31\] Added transform\_vsn\_git\_to\_tag/1 for {vsn, git} case [\#34](https://github.com/inaka/hexer/pull/34) ([davecaos](https://github.com/davecaos))
-
-## [stable](https://github.com/inaka/hexer/tree/stable) (2016-01-11)
-[Full Changelog](https://github.com/inaka/hexer/compare/0.1.0...stable)
 
 ## [0.1.0](https://github.com/inaka/hexer/tree/0.1.0) (2016-01-11)
 [Full Changelog](https://github.com/inaka/hexer/compare/0.0.1...0.1.0)
